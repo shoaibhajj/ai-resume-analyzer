@@ -100,12 +100,12 @@ function Upload() {
       <section className="main-section">
         <div className="page-heading py-16">
           <h1>Smart feedback for your dream job</h1>
-          {!isProcessing ? (
+          {isProcessing ? (
             <>
-              <h2>{statusText} Analyzing ...</h2>
-              <div className="pb-80">
-              <img src="/images/resume-scan.gif" className="w-full" alt="" />
-              </div>
+              <h2>{statusText}</h2>
+
+              <img src="/images/resume-scan-4.gif" className="w-full" alt="" />
+           
             </>
           ) : (
             <h2>Drop your resume for an ATS scroe and improvement tips</h2>
