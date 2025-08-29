@@ -48,14 +48,16 @@ export default function Home() {
           ) : (
             <h2>Review your submissions and check AI-powerd feedback.</h2>
           )}
+          {auth.isAuthenticated && (
+            <p className="text-center text-gray-600 mb-10 text-2xl">
+              Hi,{" "}
+              <span className="font-semibold ">{auth.user?.username} 🤝</span>
+            </p>
+          )}
         </div>
         {loadingResumes && (
           <div className="flex flex-col items-center justify-center">
-            <img
-              src="/images/resume-scan-2.gif"
-              alt=""
-              className="w-[200px]"
-            />
+            <img src="/images/resume-scan-2.gif" alt="" className="w-[200px]" />
           </div>
         )}
 
