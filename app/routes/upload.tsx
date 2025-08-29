@@ -1,4 +1,4 @@
-import { prepareInstructions } from "../../constants";
+import { prepareInstructions, validateFeedbackSchema } from "../../constants";
 import React, { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import FileUploader from "~/components/FileUploader";
@@ -70,7 +70,9 @@ function Upload() {
         ? feedback.message.content
         : feedback.message.content[0].text;
 
-    data.feedback = JSON.parse(feedbackText);
+    const feedbackObj = JSON.parse(feedbackText);
+    validateFeedbackSchema(feedbackObj);
+    data.feedback = feedbackObj;
 
     await kv.set(`resume:${uuid}`, JSON.stringify(data));
     setStatusText("Analysis complete, redirecting ...");
@@ -98,10 +100,12 @@ function Upload() {
       <section className="main-section">
         <div className="page-heading py-16">
           <h1>Smart feedback for your dream job</h1>
-          {isProcessing ? (
+          {!isProcessing ? (
             <>
-              <h2>{statusText}</h2>
+              <h2>{statusText} Analyzing ...</h2>
+              <div className="pb-80">
               <img src="/images/resume-scan.gif" className="w-full" alt="" />
+              </div>
             </>
           ) : (
             <h2>Drop your resume for an ATS scroe and improvement tips</h2>

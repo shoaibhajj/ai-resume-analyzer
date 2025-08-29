@@ -135,24 +135,46 @@ export const AIResponseFormat = `
       };
     }`;
 
+export function validateFeedbackSchema(feedback: any) {
+  const requiredKeys = [
+    "overallScore",
+    "ATS",
+    "toneAndStyle",
+    "content",
+    "structure",
+    "skills",
+  ];
+
+  for (const key of requiredKeys) {
+    if (!(key in feedback)) {
+      throw new Error(`Missing required key: ${key}`);
+    }
+  }
+
+  return true;
+}
+
 export const prepareInstructions = ({
   jobTitle,
   jobDescription,
-  AIResponseFormat: AIResponseFormat,
 }: {
   jobTitle: string;
   jobDescription: string;
-  AIResponseFormat?: string;
 }) =>
   `You are an expert in ATS (Applicant Tracking System) and resume analysis.
-  Please analyze and rate this resume and suggest how to improve it.
-  The rating can be low if the resume is bad.
-  Be thorough and detailed. Don't be afraid to point out any mistakes or areas for improvement.
-  If there is a lot to improve, don't hesitate to give low scores. This is to help the user to improve their resume.
-  If available, use the job description for the job user is applying to to give more detailed feedback.
-  If provided, take the job description into consideration.
-  The job title is: ${jobTitle}
-  The job description is: ${jobDescription}
-  Provide the feedback using the following format: ${AIResponseFormat}
-  Return the analysis as a JSON object, without any other text and without the backticks.
-  Do not include any other text or comments.`;
+
+Analyze and rate this resume. Follow these rules STRICTLY:
+- Use ONLY the keys and structure from the provided schema.
+- DO NOT add, remove, or rename any keys.
+- DO NOT include extra fields such as resumeUrl, imageUrl, strengths, weaknesses, etc.
+- Every section MUST be filled out with 3-4 tips (good or improve).
+- Scores are numbers (0–100).
+- Return ONLY valid JSON. No markdown, no comments, no explanations, no backticks.
+
+Job title: ${jobTitle}
+Job description: ${jobDescription}
+
+Return the feedback using EXACTLY this format:
+
+${AIResponseFormat}
+`;
